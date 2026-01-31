@@ -2,6 +2,12 @@ import React from 'react';
 import { FilterState } from '../types';
 import { Search, Filter, X } from 'lucide-react';
 
+const SUB_TYPES: Record<string, string[]> = {
+  Armor: ['Boots', 'Coat', 'Gloves', 'Helm', 'HelmAquatic', 'Leggings', 'Shoulders'],
+  Weapon: ['Axe', 'Dagger', 'Focus', 'Greatsword', 'Hammer', 'Harpoon', 'LongBow', 'Mace', 'Pistol', 'Rifle', 'Scepter', 'Shield', 'ShortBow', 'Speargun', 'Staff', 'Sword', 'Torch', 'Trident', 'Warhorn'],
+  Gathering: ['Foraging', 'Logging', 'Mining'],
+};
+
 interface FiltersProps {
   filter: FilterState;
   setFilter: React.Dispatch<React.SetStateAction<FilterState>>;
@@ -11,7 +17,12 @@ interface FiltersProps {
 
 export const Filters: React.FC<FiltersProps> = ({ filter, setFilter, totalCount, shownCount }) => {
   const handleChange = (key: keyof FilterState, value: string) => {
-    setFilter(prev => ({ ...prev, [key]: value }));
+    const updates: Partial<FilterState> = { [key]: value };
+    if (key === 'type') {
+      updates.subType = 'All';
+      updates.weightClass = 'All';
+    }
+    setFilter(prev => ({ ...prev, ...updates }));
   };
 
   return (
@@ -64,7 +75,34 @@ export const Filters: React.FC<FiltersProps> = ({ filter, setFilter, totalCount,
               <option value="Gathering">Gathering</option>
             </select>
 
-            <select 
+            {filter.type === 'Armor' && (
+              <select
+                value={filter.weightClass}
+                onChange={(e) => handleChange('weightClass', e.target.value)}
+                className="bg-gw2-dark text-white text-sm border border-gray-700 rounded px-3 py-2 focus:border-gw2-gold outline-none cursor-pointer"
+              >
+                <option value="All">All Weights</option>
+                <option value="Light">Light</option>
+                <option value="Medium">Medium</option>
+                <option value="Heavy">Heavy</option>
+                <option value="Clothing">Clothing</option>
+              </select>
+            )}
+
+            {SUB_TYPES[filter.type] && (
+              <select
+                value={filter.subType}
+                onChange={(e) => handleChange('subType', e.target.value)}
+                className="bg-gw2-dark text-white text-sm border border-gray-700 rounded px-3 py-2 focus:border-gw2-gold outline-none cursor-pointer"
+              >
+                <option value="All">All {filter.type} Types</option>
+                {SUB_TYPES[filter.type].map(st => (
+                  <option key={st} value={st}>{st}</option>
+                ))}
+              </select>
+            )}
+
+            <select
               value={filter.rarity} 
               onChange={(e) => handleChange('rarity', e.target.value)}
               className="bg-gw2-dark text-white text-sm border border-gray-700 rounded px-3 py-2 focus:border-gw2-gold outline-none cursor-pointer"

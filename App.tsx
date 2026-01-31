@@ -34,6 +34,8 @@ const App: React.FC = () => {
   const [filter, setFilter] = useState<FilterState>({
     search: '',
     type: 'All',
+    subType: 'All',
+    weightClass: 'All',
     rarity: 'All',
     show: 'All'
   });
@@ -187,7 +189,13 @@ const App: React.FC = () => {
       
       // Type
       if (filter.type !== 'All' && skin.type !== filter.type) return false;
-      
+
+      // Sub-type (details.type)
+      if (filter.subType !== 'All' && skin.details?.type !== filter.subType) return false;
+
+      // Weight class (armor only)
+      if (filter.weightClass !== 'All' && skin.details?.weight_class !== filter.weightClass) return false;
+
       // Rarity
       if (filter.rarity !== 'All' && skin.rarity !== filter.rarity) return false;
 
@@ -224,6 +232,8 @@ const App: React.FC = () => {
     const lockedSkins = allSkins.filter(s => {
       if (unlockedIds.has(s.id) || !s.name || !s.icon) return false;
       if (filter.type !== 'All' && s.type !== filter.type) return false;
+      if (filter.subType !== 'All' && s.details?.type !== filter.subType) return false;
+      if (filter.weightClass !== 'All' && s.details?.weight_class !== filter.weightClass) return false;
       if (filter.rarity !== 'All' && s.rarity !== filter.rarity) return false;
       return true;
     });

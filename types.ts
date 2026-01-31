@@ -19,6 +19,8 @@ export type FetchStatus = 'idle' | 'loading' | 'syncing' | 'success' | 'error';
 export interface FilterState {
   search: string;
   type: string; // 'All' | 'Weapon' | 'Armor' | 'Back'
+  subType: string; // 'All' | specific detail type
+  weightClass: string; // 'All' | 'Light' | 'Medium' | 'Heavy' | 'Clothing'
   rarity: string; // 'All' | 'Basic' | ...
   show: 'All' | 'Locked' | 'Unlocked';
 }
