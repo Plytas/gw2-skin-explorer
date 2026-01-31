@@ -1,0 +1,5 @@
+{
+  "name": "GW2 Skin Explorer",
+  "description": "A modern Guild Wars 2 skin explorer and tracker. Syncs all skins locally, tracks unlocked skins via API key, and helps you find new random skins to collect.",
+  "requestFramePermissions": []
+}
