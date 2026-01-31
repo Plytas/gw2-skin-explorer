@@ -1,35 +1,13 @@
 import React from 'react';
 import { Skin } from '../types';
 import { ExternalLink, Lock, Unlock } from 'lucide-react';
-import { wikiLink } from '../utils';
+import { wikiLink, RarityColors, RarityBg } from '../utils';
 
 interface SkinCardProps {
   skin: Skin;
   isUnlocked: boolean;
   onClick?: () => void;
 }
-
-const RarityColors: Record<string, string> = {
-  Junk: 'border-gray-600 text-gray-400',
-  Basic: 'border-white text-white',
-  Fine: 'border-blue-400 text-blue-400',
-  Masterwork: 'border-green-500 text-green-500',
-  Rare: 'border-yellow-400 text-yellow-400',
-  Exotic: 'border-orange-500 text-orange-500',
-  Ascended: 'border-pink-500 text-pink-500',
-  Legendary: 'border-purple-600 text-purple-600',
-};
-
-const RarityBg: Record<string, string> = {
-  Junk: 'bg-gray-800',
-  Basic: 'bg-gray-800',
-  Fine: 'bg-blue-900/20',
-  Masterwork: 'bg-green-900/20',
-  Rare: 'bg-yellow-900/20',
-  Exotic: 'bg-orange-900/20',
-  Ascended: 'bg-pink-900/20',
-  Legendary: 'bg-purple-900/20',
-};
 
 export const SkinCard: React.FC<SkinCardProps> = ({ skin, isUnlocked, onClick }) => {
   const rarityClass = RarityColors[skin.rarity] || 'border-gray-600 text-gray-400';

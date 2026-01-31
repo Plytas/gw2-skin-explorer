@@ -181,6 +181,27 @@ const App: React.FC = () => {
     await refreshAccount(apiKey, true);
   };
 
+  // Compute available sub-types and weight classes per type from loaded skins
+  const subTypeOptions = useMemo(() => {
+    const map: Record<string, Set<string>> = {};
+    const weights = new Set<string>();
+    for (const skin of allSkins) {
+      if (skin.details?.type) {
+        const t = skin.type;
+        if (!map[t]) map[t] = new Set();
+        map[t].add(skin.details.type);
+      }
+      if (skin.details?.weight_class) {
+        weights.add(skin.details.weight_class);
+      }
+    }
+    const sorted: Record<string, string[]> = {};
+    for (const [k, v] of Object.entries(map)) {
+      sorted[k] = [...v].sort();
+    }
+    return { subTypes: sorted, weightClasses: [...weights].sort() };
+  }, [allSkins]);
+
   // Filter Logic
   const filteredSkins = useMemo(() => {
     return allSkins.filter(skin => {
@@ -324,11 +345,13 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <Filters 
-        filter={filter} 
-        setFilter={setFilter} 
-        totalCount={allSkins.length} 
+      <Filters
+        filter={filter}
+        setFilter={setFilter}
+        totalCount={allSkins.length}
         shownCount={filteredSkins.length}
+        subTypeOptions={subTypeOptions.subTypes}
+        weightClassOptions={subTypeOptions.weightClasses}
       />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
