@@ -221,7 +221,12 @@ const App: React.FC = () => {
   }, [filter]);
 
   const handleRandomLocked = () => {
-    const lockedSkins = allSkins.filter(s => !unlockedIds.has(s.id) && s.name && s.icon);
+    const lockedSkins = allSkins.filter(s => {
+      if (unlockedIds.has(s.id) || !s.name || !s.icon) return false;
+      if (filter.type !== 'All' && s.type !== filter.type) return false;
+      if (filter.rarity !== 'All' && s.rarity !== filter.rarity) return false;
+      return true;
+    });
     if (lockedSkins.length === 0) {
       alert("You have unlocked all skins! (Or data hasn't loaded)");
       return;
