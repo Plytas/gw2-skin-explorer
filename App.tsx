@@ -6,7 +6,7 @@ import { SkinCard } from './components/SkinCard';
 import { LoadingOverlay } from './components/LoadingOverlay';
 import { Filters } from './components/Filters';
 import { RandomSkinModal } from './components/RandomSkinModal';
-import { Key, Shuffle, RefreshCw, Trophy, AlertCircle } from 'lucide-react';
+import { Key, Shuffle, RefreshCw, Trophy, AlertCircle, X, DatabaseZap } from 'lucide-react';
 
 const API_KEY_STORAGE = 'gw2_api_key';
 const UNLOCKED_IDS_STORAGE = 'gw2_unlocked_ids';
@@ -155,6 +155,20 @@ const App: React.FC = () => {
     }
   };
 
+  const handleRemoveApiKey = () => {
+    localStorage.removeItem(API_KEY_STORAGE);
+    localStorage.removeItem(UNLOCKED_IDS_STORAGE);
+    setApiKey('');
+    setUnlockedIds(new Set());
+    setError(null);
+  };
+
+  const handleClearStore = async () => {
+    await SkinDB.clear();
+    setAllSkins([]);
+    await initializeData();
+  };
+
   const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setApiKey(e.target.value);
   };
@@ -240,6 +254,13 @@ const App: React.FC = () => {
                 <h1 className="text-3xl font-bold text-white tracking-tight">GW2 <span className="text-gw2-gold">Skin Explorer</span></h1>
                 <p className="text-gray-400 text-sm">Track your wardrobe & discover new looks</p>
               </div>
+              <button
+                onClick={handleClearStore}
+                className="bg-gw2-panel hover:bg-gray-700 border border-gray-600 text-gray-400 hover:text-yellow-400 px-3 py-2 rounded transition-all"
+                title="Clear Store & Re-fetch"
+              >
+                <DatabaseZap size={20} />
+              </button>
             </div>
 
             <div className="flex flex-col gap-2 w-full md:w-auto">
@@ -254,13 +275,23 @@ const App: React.FC = () => {
                         className="w-full bg-black/30 border border-gray-600 rounded px-3 py-2 pl-9 text-sm focus:border-gw2-gold focus:outline-none transition-colors"
                     />
                     </div>
-                    <button 
+                    <button
                         type="submit"
                         className="bg-gw2-panel hover:bg-gray-700 border border-gray-600 text-white px-4 py-2 rounded flex items-center gap-2 transition-all"
                         title="Sync Account"
                     >
                         <RefreshCw size={18} className={loadingMsg.includes('Syncing account') ? 'animate-spin' : ''} />
                     </button>
+                    {apiKey && (
+                        <button
+                            type="button"
+                            onClick={handleRemoveApiKey}
+                            className="bg-gw2-panel hover:bg-red-900/50 border border-gray-600 text-gray-400 hover:text-red-400 px-3 py-2 rounded transition-all"
+                            title="Remove API Key"
+                        >
+                            <X size={18} />
+                        </button>
+                    )}
                 </form>
                 {error && <div className="text-red-400 text-xs flex items-center gap-1"><AlertCircle size={12}/> {error}</div>}
                 {unlockedIds.size > 0 && !error && (

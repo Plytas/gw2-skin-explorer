@@ -15,7 +15,7 @@ export const Gw2Api = {
     // GW2 API usually handles ~200 items per request, but URLs can get too long.
     // 150 is a safe batch size.
     const idsString = ids.join(',');
-    const res = await fetch(`${BASE_URL}/skins?ids=${idsString}`);
+    const res = await fetch(`${BASE_URL}/skins?ids=${idsString}&lang=en`);
     if (!res.ok) throw new Error('Failed to fetch skin details');
     return res.json();
   },
@@ -24,7 +24,7 @@ export const Gw2Api = {
   fetchAccountSkins: async (apiKey: string): Promise<number[]> => {
     // Using query parameter instead of Authorization header to prevent CORS preflight issues
     const res = await fetch(`${BASE_URL}/account/skins?access_token=${apiKey}`);
-    
+
     if (res.status === 401 || res.status === 403) {
       throw new Error('Invalid API Key or missing permissions');
     }
